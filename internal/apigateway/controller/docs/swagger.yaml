@@ -1,0 +1,145 @@
+definitions:
+  models.Post:
+    properties:
+      body:
+        type: string
+      page:
+        type: integer
+      post_id:
+        type: integer
+      title:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  models.Posts:
+    properties:
+      posts:
+        items:
+          $ref: '#/definitions/models.Post'
+        type: array
+    type: object
+  models.UpdatePost:
+    properties:
+      body:
+        type: string
+      title:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Created by Otajonov Quvonchbek
+  title: IMAN-TASK
+paths:
+  /v1/create-posts:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - Post
+  /v1/delete-post:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - default: 94586
+        in: query
+        name: post_id
+        required: true
+        type: integer
+      - default: 5971272
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Delete Post
+      tags:
+      - Post
+  /v1/get-post:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - default: 94586
+        in: query
+        name: post_id
+        required: true
+        type: integer
+      - default: 5971272
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Post'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Get post by ID
+      tags:
+      - Post
+  /v1/get-posts:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - default: 5
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - default: 1
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Posts'
+      summary: Get posts list
+      tags:
+      - Post
+  /v1/update-post:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - default: 94586
+        in: query
+        name: post_id
+        required: true
+        type: integer
+      - default: 5971272
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      - description: Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdatePost'
+      produces:
+      - application/json
+      responses: {}
+      summary: Update Post
+      tags:
+      - Post
+swagger: "2.0"

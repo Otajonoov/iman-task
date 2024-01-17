@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  collector:
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    volumes:
+      - .:/app
+      - ./.go/pkg:/go/pkg
+      - ./.go-cache:/go-cache
+    working_dir: /app
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    environment:
+      GOCACHE: /go-cache
+    entrypoint: ["./docker/dev/entrypoint.sh", "./internal/collector/cmd/main.go"]
+  
+  post:
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    volumes:
+      - .:/app
+      - ./.go/pkg:/go/pkg
+      - ./.go-cache:/go-cache
+    working_dir: /app
+    ports:
+      - "5001:5001"
+    env_file:
+      - .env
+    environment:
+      GOCACHE: /go-cache
+    entrypoint: ["./docker/dev/entrypoint.sh", "./internal/post/cmd/main.go"]
+
+  apigateway:
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    volumes:
+      - .:/app
+      - ./.go/pkg:/go/pkg
+      - ./.go-cache:/go-cache
+    working_dir: /app
+    ports:
+      - "5002:5002"
+    env_file:
+      - .env
+    environment:
+      GOCACHE: /go-cache
+    entrypoint: ["./docker/dev/entrypoint.sh", "./internal/apigateway/cmd/main.go"]
+
+  migrate:
+    image: migrate/migrate
+    volumes:
+      - .:/app
+    working_dir: /app
+    env_file:
+      - .env
+    profiles:
+      - donotstart
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: data_db
+    ports:
+      - "5432"
